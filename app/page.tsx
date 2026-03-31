@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import StarField from '@/components/StarField';
-import ShootingStars from '@/components/ShootingStars';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Education from '@/components/Education';
@@ -48,7 +47,6 @@ export default function Home() {
       </div>
 
       <StarField />
-      <ShootingStars />
       <Navigation />
       <Hero />
       <About />

@@ -94,8 +94,7 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        <span className="text-[#f1f5f9] font-['Syne']">{typedName}</span>
-        <span className="absolute -right-1 top-0 w-3 h-10 bg-[#22d3ee] animate-pulse ml-1" />
+        <span className="text-gradient-animated font-['Syne']">{typedName}</span>
       </motion.h1>
 
       {/* Title with typewriter (starts after name completes) */}
