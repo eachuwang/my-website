@@ -33,6 +33,7 @@ export default function StarField() {
           background: radial-gradient(ellipse at center, rgba(${n.color}, ${n.opacity}) 0%, transparent 70%);
           filter: blur(60px);
           pointer-events: none;
+          will-change: transform;
         `;
         depthMap.set(nebula, 0.05);
         container.appendChild(nebula);
@@ -61,6 +62,7 @@ export default function StarField() {
         star.style.top = `${Math.random() * 100}%`;
         star.style.setProperty('--twinkle-duration', `${1.5 + Math.random() * 4}s`);
         star.style.setProperty('--twinkle-delay', `${Math.random() * 4}s`);
+        star.style.willChange = 'transform';
 
         const brightness = 0.2 + Math.random() * 0.8;
         (star as HTMLElement).style.opacity = String(brightness);
@@ -93,6 +95,7 @@ export default function StarField() {
           border-radius: 50%;
           box-shadow: 0 0 ${s.size * 2}px ${s.glow}, 0 0 ${s.size * 4}px ${s.glow};
           animation: supernova 3s ease-in-out infinite;
+          will-change: transform;
         `;
         depthMap.set(star2, 0.2);
         container.appendChild(star2);
@@ -134,6 +137,7 @@ export default function StarField() {
             inset -${p.size * 0.15}px -${p.size * 0.15}px ${p.size * 0.3}px rgba(0,0,0,0.6),
             0 0 ${p.size * 0.3}px rgba(${p.baseColor}, 0.3);
           opacity: 0.75;
+          will-change: transform;
         `;
 
         if (p.ring) {
@@ -186,6 +190,7 @@ export default function StarField() {
           border-radius: 50%;
           animation: dustFloat ${6 + Math.random() * 12}s ease-in-out infinite;
           animation-delay: ${Math.random() * 5}s;
+          will-change: transform;
         `;
         depthMap.set(dust, 0.3);
         container.appendChild(dust);
