@@ -12,12 +12,12 @@ export default function Hero() {
 
   // Generate particles deterministically to avoid hydration mismatch
   const particles = useRef(
-    Array.from({ length: 12 }, (_, i) => ({
+    Array.from({ length: 6 }, (_, i) => ({
       id: i,
       left: `${(i * 17 + 7) % 100}%`,
       top: `${(i * 23 + 11) % 100}%`,
-      delay: (i * 0.3) % 4,
-      duration: 4 + (i * 0.7) % 4,
+      delay: (i * 0.5) % 4,
+      duration: 5 + (i * 0.7) % 3,
       type: i % 3 === 0 ? 'particle-amber' : 'particle-cyan',
     }))
   );

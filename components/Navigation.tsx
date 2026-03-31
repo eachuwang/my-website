@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { resumeData } from '@/lib/resume-data';
 
 const navItems = [
@@ -16,19 +16,34 @@ const navItems = [
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 80);
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+      setScrolled(scrollTop > 80);
+      setScrollProgress(progress);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // Use requestAnimationFrame to throttle scroll updates
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleNavClick = () => {
@@ -37,10 +52,10 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#22d3ee] to-[#f59e0b] z-[60] origin-left"
-        style={{ scaleX }}
+      {/* Scroll progress bar - CSS only */}
+      <div
+        className="fixed top-0 left-0 h-0.5 bg-gradient-to-r from-[#22d3ee] to-[#f59e0b] z-[60] transition-all duration-75 ease-out"
+        style={{ width: `${scrollProgress}%` }}
       />
 
       <motion.nav
@@ -69,10 +84,9 @@ export default function Navigation() {
               <motion.a
                 key={item.label}
                 href={item.href}
-                className="relative text-sm text-[#94a3b8] hover:text-[#22d3ee] transition-colors duration-300 tracking-wide link-glow"
+                className="relative text-sm text-[#94a3b8] hover:text-[#22d3ee] transition-colors duration-300 tracking-wide"
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
-                style={{ animationDelay: `${index * 50}ms` }}
               >
                 <span className="flex items-center gap-1">
                   <span className="text-[#22d3ee]/50 text-xs">0{index + 1}.</span>
@@ -86,7 +100,7 @@ export default function Navigation() {
           <motion.a
             href="#contact"
             className="hidden md:block px-4 py-2 text-sm bg-gradient-to-r from-[#22d3ee]/20 to-[#0891b2]/20 border border-[#22d3ee]/30 rounded-lg text-[#22d3ee] hover:border-[#22d3ee] hover:bg-[#22d3ee]/10 transition-all duration-300"
-            whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34, 211, 238, 0.3)' }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
             Get in Touch

@@ -80,6 +80,7 @@ body {
   border-radius: 50%;
   filter: blur(120px);
   opacity: 0.15;
+  will-change: transform, opacity;
   animation: meshPulse 8s ease-in-out infinite;
 }
 
@@ -126,6 +127,7 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  will-change: opacity;
 }
 
 .star {
@@ -134,6 +136,7 @@ body {
   height: 1px;
   background: white;
   border-radius: 50%;
+  will-change: opacity;
   animation: twinkle var(--twinkle-duration, 3s) ease-in-out infinite;
   animation-delay: var(--twinkle-delay, 0s);
 }
