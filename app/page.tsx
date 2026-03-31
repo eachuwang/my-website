@@ -11,6 +11,13 @@ import Contact from '@/components/Contact';
 export default function Home() {
   return (
     <main className="relative">
+      {/* Mesh Grid Background */}
+      <div className="mesh-bg scanlines">
+        <div className="mesh-grid" />
+        <div className="mesh-glow mesh-glow-1" />
+        <div className="mesh-glow mesh-glow-2" />
+      </div>
+
       <StarField />
       <Navigation />
       <Hero />

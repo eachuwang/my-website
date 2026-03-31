@@ -1,29 +1,40 @@
 @import "tailwindcss";
 
+/* ===========================
+   DATA TERMINAL NOIR THEME
+   =========================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-bg-start: #0d1b2a;
-  --color-bg-mid: #1b263b;
-  --color-bg-end: #0d1b2a;
-  --color-text-primary: #e0f4ff;
-  --color-text-secondary: #778da9;
-  --color-accent: #4cc9f0;
-  --color-glow: rgba(76, 201, 240, 0.4);
+  /* Core palette - Deep space + cyan glow + amber accent */
+  --bg-deep: #030712;
+  --bg-surface: #0a0f1a;
+  --bg-elevated: #111827;
+  --bg-card: rgba(17, 24, 39, 0.7);
+
+  --cyan-glow: #22d3ee;
+  --cyan-dim: #0891b2;
+  --cyan-subtle: rgba(34, 211, 238, 0.15);
+
+  --amber-accent: #f59e0b;
+  --amber-dim: #d97706;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --border-subtle: rgba(148, 163, 184, 0.1);
+  --border-glow: rgba(34, 211, 238, 0.3);
+
+  /* Spacing */
+  --section-padding: clamp(4rem, 10vh, 8rem);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--bg-deep);
+  --color-foreground: var(--text-primary);
+  --font-display: "Syne", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-body: "Inter", sans-serif;
 }
 
 html {
@@ -31,48 +42,90 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(ellipse at 20% 0%, rgba(76, 201, 240, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 100%, rgba(167, 139, 250, 0.05) 0%, transparent 50%),
-    linear-gradient(160deg, var(--color-bg-start) 0%, var(--color-bg-mid) 50%, var(--color-bg-end) 100%);
-  color: var(--color-text-primary);
+  background: var(--bg-deep);
+  color: var(--text-primary);
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "JetBrains Mono", monospace;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* 星空关键帧动画 */
-@keyframes twinkle {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 1; }
+/* ===========================
+   MESH GRID BACKGROUND
+   =========================== */
+
+.mesh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+.mesh-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--cyan-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cyan-subtle) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 50%, black 40%, transparent 100%);
+  opacity: 0.4;
 }
 
-@keyframes dustFloat {
-  0%, 100% { transform: translate(0, 0); opacity: 0.08; }
-  25% { transform: translate(8px, -12px); opacity: 0.15; }
-  50% { transform: translate(-4px, -25px); opacity: 0.1; }
-  75% { transform: translate(12px, -18px); opacity: 0.12; }
+.mesh-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  animation: meshPulse 8s ease-in-out infinite;
 }
 
-@keyframes supernova {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.2); }
+.mesh-glow-1 {
+  top: -200px;
+  left: -100px;
+  background: var(--cyan-glow);
 }
 
-/* 星空背景样式 */
+.mesh-glow-2 {
+  bottom: -200px;
+  right: -100px;
+  background: var(--amber-accent);
+  animation-delay: 4s;
+}
+
+@keyframes meshPulse {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(1.1); }
+}
+
+/* Scanline effect */
+.scanlines::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===========================
+   STAR FIELD ENHANCEMENT
+   =========================== */
+
 .star-field {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
   z-index: 0;
-  overflow: hidden;
 }
 
 .star {
@@ -94,20 +147,375 @@ body {
 .star.large {
   width: 2px;
   height: 2px;
-  box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.4);
 }
 
 .star.supernova {
   width: 2.5px;
   height: 2.5px;
   background: radial-gradient(circle, #fff 0%, #ffddaa 50%, transparent 70%);
-  box-shadow: 0 0 8px 3px rgba(255, 200, 100, 0.5);
+  box-shadow: 0 0 10px 4px rgba(255, 200, 100, 0.5);
   animation: supernova 3s ease-in-out infinite;
 }
 
-/* 大型恒星 */
-.star2 {
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+
+@keyframes supernova {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* ===========================
+   TYPOGRAPHY
+   =========================== */
+
+h1, h2, h3, h4 {
+  font-family: "Syne", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ===========================
+   GLASS MORPHISM CARDS
+   =========================== */
+
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(17, 24, 39, 0.8) 0%,
+    rgba(17, 24, 39, 0.4) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: "";
   position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 211, 238, 0.05) 0%,
+    transparent 50%,
+    rgba(245, 158, 11, 0.03) 100%
+  );
+  pointer-events: none;
+}
+
+.glass-card:hover {
+  border-color: var(--border-glow);
+  box-shadow:
+    0 0 40px rgba(34, 211, 238, 0.1),
+    0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* ===========================
+   HOLOGRAPHIC BORDER
+   =========================== */
+
+.holo-border {
+  position: relative;
+}
+
+.holo-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    var(--cyan-glow),
+    transparent 30%,
+    transparent 70%,
+    var(--amber-accent)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.holo-border:hover::after {
+  opacity: 1;
+}
+
+/* ===========================
+   TIMELINE PULSE
+   =========================== */
+
+.timeline-node {
+  position: relative;
+}
+
+.timeline-node::before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: -38px;
+  top: 4px;
   border-radius: 50%;
-  animation: supernova 4s ease-in-out infinite;
+  background: var(--bg-deep);
+  border: 2px solid var(--cyan-glow);
+  box-shadow:
+    0 0 0 4px var(--bg-deep),
+    0 0 20px var(--cyan-glow);
+  z-index: 2;
+}
+
+.timeline-node::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: -42px;
+  top: 0;
+  border-radius: 50%;
+  background: var(--cyan-glow);
+  opacity: 0;
+  animation: nodePulse 2s ease-out infinite;
+  z-index: 1;
+}
+
+@keyframes nodePulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* ===========================
+   SKILL GLOW EFFECT
+   =========================== */
+
+.skill-tag {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.skill-tag::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--cyan-glow), var(--amber-accent));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.skill-tag:hover::before {
+  opacity: 0.2;
+}
+
+.skill-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+/* ===========================
+   NAVIGATION PROGRESS
+   =========================== */
+
+.nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan-glow), var(--amber-accent));
+  z-index: 100;
+  transform-origin: left;
+}
+
+/* ===========================
+   TYPEWRITER EFFECT
+   =========================== */
+
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid var(--cyan-glow);
+  animation:
+    typing 3s steps(30) 1s forwards,
+    blink 0.8s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* ===========================
+   FLOATING PARTICLES
+   =========================== */
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation: floatParticle 6s ease-in-out infinite;
+}
+
+.particle-cyan {
+  background: var(--cyan-glow);
+  box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+.particle-amber {
+  background: var(--amber-accent);
+  box-shadow: 0 0 10px var(--amber-accent);
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(10px, -20px) scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-5px, -40px) scale(0.8);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translate(15px, -25px) scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+/* ===========================
+   LINK HOVER EFFECT
+   =========================== */
+
+.link-glow {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.link-glow::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--cyan-glow);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s ease;
+}
+
+.link-glow:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.link-glow:hover {
+  text-shadow: 0 0 20px var(--cyan-glow);
+}
+
+/* ===========================
+   SCROLL REVEAL
+   =========================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===========================
+   AMBER ACCENT BUTTON
+   =========================== */
+
+.btn-accent {
+  background: linear-gradient(135deg, var(--cyan-dim), var(--cyan-glow));
+  color: var(--bg-deep);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-accent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--amber-accent), var(--amber-dim));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-accent:hover::before {
+  opacity: 1;
+}
+
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(34, 211, 238, 0.3);
+}
+
+/* ===========================
+   CUSTOM SCROLLBAR
+   =========================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cyan-dim);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan-glow);
+}
+
+/* ===========================
+   UTILITIES
+   =========================== */
+
+.text-glow {
+  text-shadow: 0 0 20px currentColor;
+}
+
+.border-glow {
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+.bg-gradient-radial {
+  background: radial-gradient(ellipse at center, var(--bg-elevated) 0%, var(--bg-deep) 70%);
 }
