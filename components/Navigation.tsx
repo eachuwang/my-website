@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resumeData } from '@/lib/resume-data';
 
@@ -19,31 +19,26 @@ export default function Navigation() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
+    let rafId: number;
+
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      rafId = requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
 
-      setScrolled(scrollTop > 80);
-      setScrollProgress(progress);
+        setScrolled(scrollTop > 80);
+        setScrollProgress(progress);
+      });
     };
 
-    // Use requestAnimationFrame to throttle scroll updates
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', handleScroll);
     };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    handleScroll(); // Initial check
-
-    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleNavClick = () => {
@@ -52,14 +47,15 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Scroll progress bar - CSS only */}
-      <div
-        className="fixed top-0 left-0 h-0.5 bg-gradient-to-r from-[#22d3ee] to-[#f59e0b] z-[60] transition-all duration-75 ease-out"
+      {/* Smooth scroll progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 h-0.5 bg-gradient-to-r from-[#22d3ee] to-[#f59e0b] z-[60]"
         style={{ width: `${scrollProgress}%` }}
+        transition={{ type: 'tween', duration: 0.05 }}
       />
 
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? 'bg-[#030712]/80 backdrop-blur-xl border-b border-[#22d3ee]/10'
             : 'bg-transparent'
