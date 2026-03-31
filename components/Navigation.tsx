@@ -47,11 +47,10 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Smooth scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 h-0.5 bg-gradient-to-r from-[#22d3ee] to-[#f59e0b] z-[60]"
-        style={{ width: `${scrollProgress}%` }}
-        transition={{ type: 'tween', duration: 0.05 }}
+      {/* Smooth scroll progress bar - GPU accelerated */}
+      <div
+        className="fixed top-0 left-0 h-0.5 bg-gradient-to-r from-[#22d3ee] to-[#f59e0b] z-[60] origin-left"
+        style={{ transform: `scaleX(${scrollProgress / 100})` }}
       />
 
       <motion.nav
